@@ -22,7 +22,7 @@ const useUserList = () => {
   }, [page]);
 
   if (!userData) {
-    return false;
+    return {};
   }
   return {
     pages: userData.data.total_pages,

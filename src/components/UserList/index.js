@@ -15,7 +15,7 @@ import useUserList from './UserListHook';
 
 import './UserList.scss';
 
-const UserList = () => {
+const UserList = (props) => {
   const {
     pages,
     setPage,
@@ -43,7 +43,7 @@ const UserList = () => {
   return (
     <div className="UserList">
       <Paper className="UserList-wrapper" elevation={1}>
-        <div>User List</div>
+        <div>{`User List - ${props.date}`}</div>
         <div className="UserList-wrapper-pages">
           <span>Page</span>
           <Select

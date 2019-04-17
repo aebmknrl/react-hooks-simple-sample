@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 // Native Components
 import Button from '@material-ui/core/Button';
+import moment from 'moment';
 
 // Custom Components
 import UserList from './components/UserList';
@@ -16,15 +17,19 @@ const App = () => {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        Click on the button to show the user list.
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setShowUserList(!showUserList)}
+          Click on the button to {showUserList ? 'hide' : 'show'} the user list.
+        <div
+          className="App-header-button"
         >
-          {showUserList ? 'Hide' : 'Show'}
-        </Button>
-        {showUserList && <UserList />}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setShowUserList(!showUserList)}
+          >
+            {showUserList ? 'Hide' : 'Show'}
+          </Button>
+        </div>
+        {showUserList && <UserList date={moment().format('DD MMMM YYYY')} />}
       </header>
     </div>
   );
