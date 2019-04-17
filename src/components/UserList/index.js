@@ -19,7 +19,7 @@ const UserList = () => {
   const userListHook = useUserList();
   if (!userListHook) {
     return (
-      <div>Cargando...</div>
+      <div>Loading...</div>
     );
   }
   const totalPages = userListHook.pages;
@@ -39,7 +39,7 @@ const UserList = () => {
       <Paper className="UserList-wrapper" elevation={1}>
         <div>User List</div>
         <div className="UserList-wrapper-pages">
-          <span>Página</span>
+          <span>Page</span>
           <Select
             value={userListHook.currentPage}
             onChange={event => handleChange(event)}
