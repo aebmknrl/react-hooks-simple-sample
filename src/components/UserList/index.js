@@ -16,22 +16,28 @@ import useUserList from './UserListHook';
 import './UserList.scss';
 
 const UserList = () => {
-  const userListHook = useUserList();
-  if (!userListHook) {
+  const {
+    pages,
+    setPage,
+    currentPage,
+    isLoading,
+    list,
+  } = useUserList();
+
+  if (!pages) {
     return (
       <div>Loading...</div>
     );
   }
-  const totalPages = userListHook.pages;
-  const pages = [];
-  if (totalPages) {
-    for (let i = 0; i < totalPages; i += 1) {
-      pages.push(i + 1);
+  const pagesArr = [];
+  if (pages) {
+    for (let i = 0; i < pages; i += 1) {
+      pagesArr.push(i + 1);
     }
   }
 
   const handleChange = (event) => {
-    userListHook.setPage(event.target.value);
+    setPage(event.target.value);
   };
 
   return (
@@ -41,22 +47,22 @@ const UserList = () => {
         <div className="UserList-wrapper-pages">
           <span>Page</span>
           <Select
-            value={userListHook.currentPage}
+            value={currentPage}
             onChange={event => handleChange(event)}
           >
-            {pages.map(value => (
+            {pagesArr.map(value => (
               <MenuItem value={value} key={value}>{value}</MenuItem>
             ))}
           </Select>
         </div>
-        {userListHook.isLoading && (
+        {isLoading && (
           <div className="UserList-wrapper-progress">
             <CircularProgress />
           </div>
         )}
-        {!userListHook.isLoading && (
+        {!isLoading && (
           <List>
-            {userListHook.list.map(value => (
+            {list.map(value => (
               <ListItem key={value.id}>
                 <ListItemAvatar>
                   <Avatar alt="Remy Sharp" src={value.avatar} />
