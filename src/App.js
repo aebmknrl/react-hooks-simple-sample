@@ -1,25 +1,33 @@
 import React, { useState } from 'react';
+
+// Native Components
+import Button from '@material-ui/core/Button';
+
+// Custom Components
+import UserList from './components/UserList';
+
+// Assets
 import logo from './logo.svg';
 import './App.scss';
 
-const App = () => (
-  <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>
-        Edit <code>src/App.js</code>
-        and save to reload.
-      </p>
-      <a
-        className="App-link"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Learn React
-      </a>
-    </header>
-  </div>
-);
+const App = () => {
+  const [showUserList, setShowUserList] = useState(false);
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        Click on the button to show the user list.
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setShowUserList(!showUserList)}
+        >
+          {showUserList ? 'Hide' : 'Show'}
+        </Button>
+        {showUserList && <UserList />}
+      </header>
+    </div>
+  );
+};
 
 export default App;

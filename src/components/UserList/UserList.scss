@@ -1,0 +1,25 @@
+.UserList {
+  padding: 20px;
+  color: black;
+
+  &-wrapper {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+
+    &-pages {
+      font-size: 0.5em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      & span {
+        margin-right: 10px;
+      }
+    }
+
+    &-progress {
+      padding: 20px;
+    }
+  }
+}
