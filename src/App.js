@@ -2,34 +2,45 @@ import React, { useState } from 'react';
 
 // Native Components
 import Button from '@material-ui/core/Button';
-import moment from 'moment';
 
-// Custom Components
-import UserList from './components/UserList';
+// Hooks
+import useFetch from './hooks/useFetch';
 
 // Assets
 import logo from './logo.svg';
 import './App.scss';
 
 const App = () => {
-  const [showUserList, setShowUserList] = useState(false);
+  const [page, setPage] = useState(1);
+  const [data, error, isLoading, abort, doFetch] = useFetch();
+
+  const handleAction = () => {
+    if (isLoading) {
+      abort();
+      console.log('abort signal sended');
+    } else {
+      doFetch(`https://reqres.in/api/users?page=${page}`);
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-          Click on the button to {showUserList ? 'hide' : 'show'} the user list.
         <div
           className="App-header-button"
         >
           <Button
             variant="contained"
-            color="primary"
-            onClick={() => setShowUserList(!showUserList)}
+            color={isLoading ? 'secondary' : 'primary'}
+            onClick={() => handleAction()}
           >
-            {showUserList ? 'Hide' : 'Show'}
+            {isLoading ? 'Cancel' : 'Test'}
           </Button>
         </div>
-        {showUserList && <UserList date={moment().format('DD MMMM YYYY')} />}
+        {isLoading && 'Loading...'}
+        {data && !isLoading && 'Data loaded'}
+        <input type="text" onChange={event => setPage(event.target.value)} value={page} />
       </header>
     </div>
   );

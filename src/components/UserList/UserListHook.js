@@ -16,10 +16,9 @@ const useUserList = () => {
     };
 
     fetchData();
-    return () => {
-      console.log('List Component Unmounted');
-    };
   }, [page]);
+
+  useEffect(() => () => console.log('List Component Unmounted'), []);
 
   if (!userData) {
     return {};

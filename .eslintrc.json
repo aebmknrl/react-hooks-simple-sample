@@ -2,6 +2,7 @@
     "extends": "airbnb",
     "rules": {
       "linebreak-style": 0,
+      "react/jsx-one-expression-per-line": false,
       "import/first": ["warn", "DISABLE-absolute-first"],
       "react/jsx-filename-extension": [1, {
         "extensions": [".js", ".jsx"]
