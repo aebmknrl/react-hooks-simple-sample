@@ -4,6 +4,7 @@ const useFetch = (defaultUrl) => {
   const [url] = useState(defaultUrl);
   const [data, setData] = useState();
   const [error, setError] = useState();
+  const [retry, setRetry] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const controlllerRef = useRef(null);
 
@@ -12,15 +13,19 @@ const useFetch = (defaultUrl) => {
     setData(null);
     const controller = new AbortController();
     controlllerRef.current = controller;
-    fetch(newUrl, { signal: controller.signal })
+    return fetch(newUrl, { signal: controller.signal })
       .then(res => res.json())
       .then((res) => {
-        setData(res.data);
+        setData(res);
         setIsLoading(false);
       })
       .catch((err) => {
-        setError(err);
+        setError(err.name);
         console.log(err.name);
+        console.log(error);
+        if (err.name === 'AbortError') {
+          setRetry(url);
+        }
         setIsLoading(false);
       });
   };
@@ -30,7 +35,11 @@ const useFetch = (defaultUrl) => {
     }
   }, [url]);
 
-  const abort = () => (controlllerRef.current.abort());
+  const abort = () => {
+    setError('AbortError');
+    controlllerRef.current.abort();
+  };
+  const doRetry = () => (doFetch(retry));
 
   return [
     data,
@@ -38,6 +47,7 @@ const useFetch = (defaultUrl) => {
     isLoading,
     abort,
     doFetch,
+    doRetry,
   ];
 };
 

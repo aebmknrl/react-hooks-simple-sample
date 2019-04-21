@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -9,58 +9,82 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
 
 // Hook
-import useUserList from './UserListHook';
+import useFetch from '../../hooks/useFetch';
 
 import './UserList.scss';
 
-const UserList = (props) => {
-  const {
-    pages,
-    setPage,
-    currentPage,
-    isLoading,
-    list,
-  } = useUserList();
+const UserList = () => {
+  const [page, setPage] = useState(1);
+  const [data, error, isLoading, abort, doFetch, doRetry] = useFetch(`https://reqres.in/api/users?page=${page}`);
 
-  if (!pages) {
+  if (isLoading || (!isLoading && !data)) {
     return (
-      <div>Loading...</div>
+      <Paper className="UserList-wrapper" elevation={1}>
+        <div className="UserList-wrapper-progress">
+          <CircularProgress />
+        </div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => abort()}
+        >
+          Cancel
+        </Button>
+      </Paper>
     );
   }
+
+  console.log(error);
+  if (error && error === 'AbortError') {
+    return (
+      <Paper className="UserList-wrapper" elevation={1}>
+        <div className="UserList-wrapper-progress">
+          <CircularProgress />
+        </div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => doRetry()}
+        >
+          Retry
+        </Button>
+      </Paper>
+    );
+  }
+
+  const handleChangePage = (event) => {
+    setPage(event.target.value);
+    doFetch(`https://reqres.in/api/users?page=${page}`);
+  };
+
   const pagesArr = [];
-  if (pages) {
-    for (let i = 0; i < pages; i += 1) {
+  if (data && data.total_pages) {
+    for (let i = 0; i < data.total_pages; i += 1) {
       pagesArr.push(i + 1);
     }
   }
 
-  const handleChange = (event) => {
-    setPage(event.target.value);
-  };
+  const list = data.data || [];
 
   return (
     <div className="UserList">
       <Paper className="UserList-wrapper" elevation={1}>
-        <div>{`User List - ${props.date}`}</div>
+        <div>User List</div>
         <div className="UserList-wrapper-pages">
           <span>Page</span>
           <Select
-            value={currentPage}
-            onChange={event => handleChange(event)}
+            value={page}
+            onChange={event => handleChangePage(event)}
           >
             {pagesArr.map(value => (
               <MenuItem value={value} key={value}>{value}</MenuItem>
             ))}
           </Select>
         </div>
-        {isLoading && (
-          <div className="UserList-wrapper-progress">
-            <CircularProgress />
-          </div>
-        )}
-        {!isLoading && (
+        {!isLoading && data && (
           <List>
             {list.map(value => (
               <ListItem key={value.id}>
