@@ -20,7 +20,21 @@ const UserList = () => {
   const [page, setPage] = useState(1);
   const [data, error, isLoading, abort, doFetch, doRetry] = useFetch(`https://reqres.in/api/users?page=${page}`);
 
-  if (isLoading || (!isLoading && !data)) {
+  if (error) {
+    return (
+      <Paper className="UserList-wrapper" elevation={1}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => doRetry()}
+        >
+          Retry
+        </Button>
+      </Paper>
+    );
+  }
+
+  if (isLoading || !data) {
     return (
       <Paper className="UserList-wrapper" elevation={1}>
         <div className="UserList-wrapper-progress">
@@ -37,27 +51,9 @@ const UserList = () => {
     );
   }
 
-  console.log(error);
-  if (error && error === 'AbortError') {
-    return (
-      <Paper className="UserList-wrapper" elevation={1}>
-        <div className="UserList-wrapper-progress">
-          <CircularProgress />
-        </div>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => doRetry()}
-        >
-          Retry
-        </Button>
-      </Paper>
-    );
-  }
-
   const handleChangePage = (event) => {
     setPage(event.target.value);
-    doFetch(`https://reqres.in/api/users?page=${page}`);
+    doFetch(`https://reqres.in/api/users?page=${event.target.value}`)
   };
 
   const pagesArr = [];
@@ -98,6 +94,7 @@ const UserList = () => {
             ))}
           </List>
         )}
+        {error && 'Hay error'}
       </Paper>
     </div>
   );
