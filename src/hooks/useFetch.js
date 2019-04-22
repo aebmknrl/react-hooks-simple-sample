@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 
-const useFetch = (defaultUrl) => {
-  const [url, setUrl] = useState(defaultUrl);
+const useFetch = () => {
+  const [url, setUrl] = useState();
   const [data, setData] = useState();
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -24,12 +24,6 @@ const useFetch = (defaultUrl) => {
         setError(err.name);
       });
   };
-  useEffect(() => {
-    if (url) {
-      doFetch(url);
-    }
-  }, [url]);
-
   const abort = () => (controlllerRef.current.abort());
 
   const doRetry = () => {

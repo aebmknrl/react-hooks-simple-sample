@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,7 +18,11 @@ import './UserList.scss';
 
 const UserList = () => {
   const [page, setPage] = useState(1);
-  const [data, error, isLoading, abort, doFetch, doRetry] = useFetch(`https://reqres.in/api/users?page=${page}`);
+  const [data, error, isLoading, abort, doFetch, doRetry] = useFetch();
+
+  useEffect(() => {
+    doFetch(`https://reqres.in/api/users?page=${page}`);
+  }, [page]);
 
   if (error) {
     return (
@@ -53,7 +57,6 @@ const UserList = () => {
 
   const handleChangePage = (event) => {
     setPage(event.target.value);
-    doFetch(`https://reqres.in/api/users?page=${event.target.value}`)
   };
 
   const pagesArr = [];
